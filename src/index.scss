@@ -75,4 +75,14 @@ body {
   input[type=checkbox]{
     display: none;
   }
+  label{
+    display: none;
+  }
+}
+
+.filter{
+  flex-wrap: wrap;
+  button{
+    margin: 10px 5px;
+  }
 }

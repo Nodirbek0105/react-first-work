@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 export default function todo() {
     const [todos, setTodos] = useState([])
-    const [todoName, setTodoName] = useState("")
+    const [id, setId] = useState(0)
+    const input = useRef(null)
+    const name = useRef(null)
+
 
     function onSubmit(evt) {
         evt.preventDefault()
-        console.log(todos.length, todoName);
-        setTodos([...todos, { name: todoName, isDone: false, id: todos.length + 1, rendered: true }])
-        console.log(todos);
+        setTodos([...todos, { name: name.current.value, isDone: false, id: id, rendered: true, modal: false, edited: false }])
+        setId(id + 1)
     }
     function inputChange(id) {
         let temp = [...todos]
@@ -19,6 +21,22 @@ export default function todo() {
     }
     function deleteTodo(id) {
         let temp = todos.filter(todo => +todo.id !== +id)
+        setTodos(temp)
+    }
+    function clearDone() {
+        let temp = todos.filter(todo => todo.isDone == false)
+        setTodos(temp)
+    }
+    function openModal(id) {
+        let temp = [...todos]
+        let index = temp.findIndex(todo => +todo.id === +id)
+        temp[index].modal = !temp[index].modal
+        setTodos(temp)
+    }
+    function openModalEdit(id) {
+        let temp = [...todos]
+        let index = temp.findIndex(todo => +todo.id === +id)
+        temp[index].edited = !temp[index].edited
         setTodos(temp)
     }
     let todoBox = document.querySelector("[data-todos]")
@@ -56,6 +74,13 @@ export default function todo() {
         })
         setTodos(temp)
     }
+    function editTodo(id, name) {
+        let temp = [...todos]
+        let index = temp.findIndex(todo => +todo.id === +id)
+        temp[index].name = `${name}`
+        temp[index].edited = false
+        setTodos(temp)
+    }
     return (
         <>
             <div className="container">
@@ -66,8 +91,7 @@ export default function todo() {
                             <form onSubmit={onSubmit} className="card-body">
                                 <label htmlFor="task" className="form-label">Your task</label>
                                 <input
-                                    value={todoName}
-                                    onChange={evt => setTodoName(evt.target.value)}
+                                    ref={name}
                                     type="text"
                                     className="form-control"
                                     id="task"
@@ -78,15 +102,25 @@ export default function todo() {
                                 </button>
                             </form>
                             <div className="filter d-flex justify-content-around align-items-center">
-                                <button
+                            <button
                                     type="button"
-                                    className="btn btn-sm btn-success"
+                                    className="btn btn-sm btn-danger"
                                     onClick={() => {
                                         setTodos([])
                                         todoBox.classList.remove("todos")
                                     }}
                                 >
                                     Clear All
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-success"
+                                    onClick={() => {
+                                        clearDone()
+                                        todoBox.classList.remove("todos")
+                                    }}
+                                >
+                                    Clear done
                                 </button>
                                 <button
                                     type="button"
@@ -117,25 +151,73 @@ export default function todo() {
                                     return <>
                                         <div key={todo.id} className="card mt-4">
                                             <div
-                                                className="card-header d-flex justify-content-between"
+                                                className="card-header d-flex justify-content-between flex-column"
                                             >
-                                                <div className="parent-input d-flex" style={{alignItems:"start"}}>
-                                                <input onChange={() => inputChange(todo.id)} checked={todo.isDone} type="checkbox" name="" />
+                                                <div className="parent-input d-flex" style={{ alignItems: "center" }}>
+                                                    <label htmlFor="checked">Done  </label>
+                                                    <input id='checked' onChange={() => inputChange(todo.id)} style={{ height: "20px", width: "20px" }} checked={todo.isDone} type="checkbox" name="" />
                                                 </div>
-                                                <span className={todo.isDone == true ? "line" : "" } style={{maxWidth:"85%"}}>{todo.name}</span>
-                                                <div>
+                                                <span className={todo.isDone == true ? "line" : ""} >{`Your task:${todo.name}`}</span>
+                                                <div className='w-100 d-flex align-items-center justify-content-around'>
                                                     <button
                                                         type="button"
-                                                        className="btn btn-sm btn-danger"
-                                                        onClick={() => deleteTodo(todo.id)}
+                                                        className="btn btn-warning"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal"
+                                                        onClick={() => openModalEdit(todo.id)}
+                                                    >
+                                                        edit
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-danger"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal"
+                                                        onClick={() => openModal(todo.id)}
                                                     >
                                                         delete
                                                     </button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div >
+                                        <div className={`modal fade ${todo.modal == true ? "show d-block" : ""}`} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">You delete this todo, or no</h5>
+                                                        <button type="button" className="btn-close" onClick={() => openModal(todo.id)} data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-success" onClick={() => openModal(todo.id)} data-bs-dismiss="modal">No, I don't</button>
+                                                        <button type="button" className="btn btn-danger" onClick={() => deleteTodo(todo.id)} >Delete</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div >
+                                        <div className={`modal fade ${todo.edited == true ? "show d-block" : ""}`} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">You want edit this todo ?</h5>
+                                                        <button type="button" className="btn-close" onClick={() => openModalEdit(todo.id)} data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form onSubmit={(evt) => {
+                                                            editTodo(todo.id, input.current.value)
+                                                            evt.preventDefault()
+                                                        }}>
+                                                            <input required="" type="text" ref={input} defaultValue={todo.name} onChange={(evt) => input.current.defaultValue = evt.target.value} />
+                                                        </form>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-success" onClick={() => openModalEdit(todo.id)} data-bs-dismiss="modal">No, I don't edit</button>
+                                                        <button type="button" className="btn btn-danger" onClick={() => editTodo(todo.id, input.current.value)} >Edit</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div >
                                     </>
-                                    // <TodoItem todo={todo.name} isDone={todo.isDone}/>
                                 })}
                             </div>
                         </div>
