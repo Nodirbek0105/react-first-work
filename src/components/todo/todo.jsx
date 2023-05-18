@@ -1,17 +1,22 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
+import { LanguageContext } from '../../context/LanguageContext'
 
 export default function todo() {
     const [todos, setTodos] = useState([])
     const [id, setId] = useState(0)
     const input = useRef(null)
     const name = useRef(null)
-
+    const { language, languages, toggleLanguage, stringsArr, setLanguage } = useContext(LanguageContext)
+    let todoBox = document.querySelector("[data-todos]")
+    let strings = stringsArr[`${language}`]
+    console.log(stringsArr[`${language}`]);
 
     function onSubmit(evt) {
         evt.preventDefault()
         setTodos([...todos, { name: name.current.value, isDone: false, id: id, rendered: true, modal: false, edited: false }])
         setId(id + 1)
     }
+
     function inputChange(id) {
         let temp = [...todos]
         let index = temp.findIndex(todo => +todo.id == +id)
@@ -19,27 +24,32 @@ export default function todo() {
         temp[index].isDone = !temp[index].isDone
         setTodos(temp)
     }
+
     function deleteTodo(id) {
         let temp = todos.filter(todo => +todo.id !== +id)
         setTodos(temp)
     }
+
     function clearDone() {
         let temp = todos.filter(todo => todo.isDone == false)
         setTodos(temp)
     }
+
     function openModal(id) {
         let temp = [...todos]
         let index = temp.findIndex(todo => +todo.id === +id)
         temp[index].modal = !temp[index].modal
         setTodos(temp)
     }
+
     function openModalEdit(id) {
         let temp = [...todos]
         let index = temp.findIndex(todo => +todo.id === +id)
         temp[index].edited = !temp[index].edited
         setTodos(temp)
     }
-    let todoBox = document.querySelector("[data-todos]")
+
+
     function all() {
         todoBox.classList.remove("todos")
         let temp = [...todos]
@@ -48,6 +58,7 @@ export default function todo() {
         })
         setTodos(temp)
     }
+
     function done() {
         todoBox.classList.add("todos")
         let temp = [...todos]
@@ -61,6 +72,7 @@ export default function todo() {
         })
         setTodos(temp)
     }
+
     function notDone() {
         todoBox.classList.add("todos")
         let temp = [...todos]
@@ -74,6 +86,7 @@ export default function todo() {
         })
         setTodos(temp)
     }
+
     function editTodo(id, name) {
         let temp = [...todos]
         let index = temp.findIndex(todo => +todo.id === +id)
@@ -81,36 +94,51 @@ export default function todo() {
         temp[index].edited = false
         setTodos(temp)
     }
+    toggleLanguage("english")
+    console.log(strings);
+    toggleLanguage("uzbek")
+    console.log(strings);
     return (
         <>
             <div className="container">
                 <div className="row">
                     <div className="col-sm-6 offset-sm-3">
                         <div className="card">
-                            <div className="card-header">Todo</div>
+                            <div className="card-header">
+                                {strings?.create?.title}
+                                <div className="languages">
+                                    {...languages.map((lang) => {
+                                        return <>
+                                            <button key={12} onClick={setLanguage(`${lang}`)} className="btn-primary">{lang}</button>
+                                        </>
+                                    })}
+                                    {/* <button key={12} onClick={toggleLanguage("uzbek")} className="btn-primary">uzbek</button>
+                                        <button key={123} onClick={toggleLanguage("english")} className="btn-primary">english</button> */}
+                                </div>
+                            </div>
                             <form onSubmit={onSubmit} className="card-body">
-                                <label htmlFor="task" className="form-label">Your task</label>
+                                <label htmlFor="task" className="form-label">{strings?.create?.task}</label>
                                 <input
                                     ref={name}
+                                    required
                                     type="text"
                                     className="form-control"
                                     id="task"
                                     placeholder="Enter Your task"
                                 />
                                 <button type="submit" className="btn btn-primary w-100 mt-3">
-                                    Add Todo
+                                    {strings?.create?.add}
                                 </button>
                             </form>
                             <div className="filter d-flex justify-content-around align-items-center">
-                            <button
+                                <button
                                     type="button"
                                     className="btn btn-sm btn-danger"
                                     onClick={() => {
                                         setTodos([])
                                         todoBox.classList.remove("todos")
                                     }}
-                                >
-                                    Clear All
+                                >{strings?.filter?.clear}
                                 </button>
                                 <button
                                     type="button"
@@ -119,29 +147,26 @@ export default function todo() {
                                         clearDone()
                                         todoBox.classList.remove("todos")
                                     }}
-                                >
-                                    Clear done
+                                >{strings?.filter?.clearDone}
                                 </button>
                                 <button
                                     type="button"
                                     className="btn btn-sm btn-success"
                                     onClick={() => all()}
-                                >
-                                    All todos
+                                >{strings?.filter?.all}
                                 </button>
                                 <button
                                     type="button"
                                     className="btn btn-sm btn-success"
                                     onClick={() => done(todo.id)}
                                 >
-                                    Qilinganlari
+                                    {strings?.filter?.done}
                                 </button>
                                 <button
                                     type="button"
                                     className="btn btn-sm btn-success"
                                     onClick={() => notDone(todo.id)}
-                                >
-                                    Qilinmaganlari
+                                >{strings?.filter?.notDone}
                                 </button>
 
                             </div>
@@ -154,7 +179,7 @@ export default function todo() {
                                                 className="card-header d-flex justify-content-between flex-column"
                                             >
                                                 <div className="parent-input d-flex" style={{ alignItems: "center" }}>
-                                                    <label htmlFor="checked">Done  </label>
+                                                    <label htmlFor="checked">{strings?.todo?.done}  </label>
                                                     <input id='checked' onChange={() => inputChange(todo.id)} style={{ height: "20px", width: "20px" }} checked={todo.isDone} type="checkbox" name="" />
                                                 </div>
                                                 <span className={todo.isDone == true ? "line" : ""} >{`Your task:${todo.name}`}</span>
@@ -166,7 +191,7 @@ export default function todo() {
                                                         data-bs-target="#exampleModal"
                                                         onClick={() => openModalEdit(todo.id)}
                                                     >
-                                                        edit
+                                                        {strings?.todo?.edit}
                                                     </button>
                                                     <button
                                                         type="button"
@@ -175,7 +200,7 @@ export default function todo() {
                                                         data-bs-target="#exampleModal"
                                                         onClick={() => openModal(todo.id)}
                                                     >
-                                                        delete
+                                                        {strings?.todo?.delete}
                                                     </button>
                                                 </div>
                                             </div>
@@ -184,13 +209,14 @@ export default function todo() {
                                             <div className="modal-dialog">
                                                 <div className="modal-content">
                                                     <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">You delete this todo, or no</h5>
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            {strings?.modal?.delete?.want}</h5>
                                                         <button type="button" className="btn-close" onClick={() => openModal(todo.id)} data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
 
                                                     <div className="modal-footer">
-                                                        <button type="button" className="btn btn-success" onClick={() => openModal(todo.id)} data-bs-dismiss="modal">No, I don't</button>
-                                                        <button type="button" className="btn btn-danger" onClick={() => deleteTodo(todo.id)} >Delete</button>
+                                                        <button type="button" className="btn btn-success" onClick={() => openModal(todo.id)} data-bs-dismiss="modal">{strings?.modal?.delete?.doNot}</button>
+                                                        <button type="button" className="btn btn-danger" onClick={() => deleteTodo(todo.id)} >{strings?.todo?.delete}</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -199,7 +225,7 @@ export default function todo() {
                                             <div className="modal-dialog">
                                                 <div className="modal-content">
                                                     <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">You want edit this todo ?</h5>
+                                                        <h5 className="modal-title" id="exampleModalLabel">{strings?.modal?.edit?.want}</h5>
                                                         <button type="button" className="btn-close" onClick={() => openModalEdit(todo.id)} data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div className="modal-body">
@@ -211,8 +237,8 @@ export default function todo() {
                                                         </form>
                                                     </div>
                                                     <div className="modal-footer">
-                                                        <button type="button" className="btn btn-success" onClick={() => openModalEdit(todo.id)} data-bs-dismiss="modal">No, I don't edit</button>
-                                                        <button type="button" className="btn btn-danger" onClick={() => editTodo(todo.id, input.current.value)} >Edit</button>
+                                                        <button type="button" className="btn btn-success" onClick={() => openModalEdit(todo.id)} data-bs-dismiss="modal">{strings?.modal?.edit?.doNot}</button>
+                                                        <button type="button" className="btn btn-danger" onClick={() => editTodo(todo.id, input.current.value)} >{strings?.todo?.edit}</button>
                                                     </div>
                                                 </div>
                                             </div>

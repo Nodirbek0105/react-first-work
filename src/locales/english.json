@@ -1,0 +1,29 @@
+{
+  "create": {
+    "title": "Todo",
+    "task": "Your task",
+    "add": "Add Todo"
+  },
+  "filter": {
+    "clear": "Clear All",
+    "clearDone": "Clear Done",
+    "all": "All Todos",
+    "done": "Done",
+    "notDone": "Not Done"
+  },
+  "todo": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "done": "Done"
+  },
+  "modal": {
+    "delete": {
+      "want": "You delete this todo, or no",
+      "doNot":"No I Don't"
+    },
+    "edit": {
+      "want": "You want edit this todo ?",
+      "doNot":"No I Don't"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+    "create": {
+      "title": "Eslatma",
+      "task": "Sizning Topshiriqingiz",
+      "add": "Topshiriq Yarating"
+    },
+    "filter": {
+      "clear": "Barchasini Tozalash",
+      "clearDone": "Qilinganini Tozolash",
+      "all": "Barcha Topshiriqlar",
+      "done": "Qilinganlari",
+      "notDone": "Qilinmaganlari"
+    },
+    "todo": {
+      "edit": "O'zgartirish",
+      "delete": "Yo'q Qilish",
+      "done": "Qilingan"
+    },
+    "modal": {
+      "delete": {
+        "want": "Siz bu Topshiriqni yo'q qilasizmi , yoki yo'q ?",
+        "doNot":"Yo'q Qilmayaman"
+      },
+      "edit": {
+        "want": "Siz bu Topshiriqni o'zgartirishni hohlaysizmi ?",
+        "doNot":"Yo'q Qilmayaman"
+      }
+    }
+  }
+  
