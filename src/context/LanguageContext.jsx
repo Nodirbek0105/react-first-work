@@ -14,11 +14,7 @@ export const LanguageContext = createContext({
 
 export default function LanguageProvider({ children }) {
     function toggleLanguage(lang) {
-        // useEffect(() => {
-        //     console.log(lang , stringsArr[lang]);
-        //     setLanguage(lang)
-        //     strings = stringsArr[lang]
-        // }, [])
+
     }
     return (
         <LanguageContext.Provider value={{ languages, stringsArr, toggleLanguage }} >

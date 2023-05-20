@@ -108,8 +108,6 @@ export default function todo() {
                                             <button key={lang} onClick={() => setStrings(stringsArr[lang])} className="btn-primary">{lang}</button>
                                         </>
                                     })}
-                                    {/*                        <button key={12} onClick={toggleLanguage("uzbek")} className="btn-primary">uzbek</button>
-                        <button key={123} onClick={toggleLanguage("english")} className="btn-primary">english</button> */}
                                 </div>
                             </div>
                             <form onSubmit={onSubmit} className="card-body">
