@@ -1,10 +1,11 @@
 import React from "react";
 import "./header.scss";
+import { NavLink } from "react-router-dom";
 
-export default function header() {
+export default function Header() {
   return (
     <>
-      <svg xmlns="http://www.w3.org/2000/svg" style={{display: "none"}} >
+      <svg xmlns="http://www.w3.org/2000/svg" style={{ display: "none" }} >
         <symbol id="check" viewBox="0 0 16 16">
           <title>Check</title>
           <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
@@ -38,18 +39,8 @@ export default function header() {
             </a>
 
             <nav className="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-              <a className="me-3 py-2 text-dark text-decoration-none" href="#">
-                Features
-              </a>
-              <a className="me-3 py-2 text-dark text-decoration-none" href="#">
-                Enterprise
-              </a>
-              <a className="me-3 py-2 text-dark text-decoration-none" href="#">
-                Support
-              </a>
-              <a className="py-2 text-dark text-decoration-none" href="#">
-                Pricing
-              </a>
+              <NavLink  className={(isActive) => `me-3 py-2 text-dark text-decoration-none ${isActive ? "active" : ""}`} to={"/pricing"}>Pricing</NavLink>
+              <NavLink className={(isActive) => `me-3 py-2 text-dark text-decoration-none ${isActive ? "active" : ""}`} to={"/about"}>About Pricing</NavLink>
             </nav>
           </div>
         </header>

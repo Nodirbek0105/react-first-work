@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import uzbek from "./../locales/uzbek.json"
 import english from "./../locales/english.json"
 let languages = ["english", "uzbek"]
@@ -11,15 +11,17 @@ export const LanguageContext = createContext({
     strings: stringsArr.english,
     languages
 })
-    
-export default function LanguageProvider({children}) {
-const [language, setLanguage] = useState("english")
+
+export default function LanguageProvider({ children }) {
     function toggleLanguage(lang) {
-        console.log(lang);
-        setLanguage(lang)
+        // useEffect(() => {
+        //     console.log(lang , stringsArr[lang]);
+        //     setLanguage(lang)
+        //     strings = stringsArr[lang]
+        // }, [])
     }
     return (
-        <LanguageContext.Provider value={{ language, languages, stringsArr ,  toggleLanguage, setLanguage }} >
+        <LanguageContext.Provider value={{ languages, stringsArr, toggleLanguage }} >
             {children}
         </LanguageContext.Provider >
     )

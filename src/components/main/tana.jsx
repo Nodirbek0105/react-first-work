@@ -1,7 +1,7 @@
 import React from "react";
 import "./main.scss";
 
-export default function tana() {
+export default function Tana() {
   return (
     <>
       <div className="pricing-header p-3 pb-md-4 mx-auto text-center">

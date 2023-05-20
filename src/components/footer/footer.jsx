@@ -1,7 +1,7 @@
 import React from 'react'
 import "./footer.scss"
 
-export default function footer() {
+export default function Footer() {
   return (
     <>
       <h2 className="display-6 text-center mb-4">Compare plans</h2>
@@ -112,7 +112,6 @@ export default function footer() {
           </tbody>
         </table>
       </div>
-      <h2 className='text-center'><a className='text-black-50 text-decoration-none' href="https://react1-nodirbek0105.netlify.app">Creator NNN</a></h2>
     </>
   )
 }
