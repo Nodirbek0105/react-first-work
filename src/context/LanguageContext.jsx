@@ -1,7 +1,19 @@
 import { createContext, useEffect, useState } from "react";
 import uzbek from "./../locales/uzbek.json"
 import english from "./../locales/english.json"
-let languages = ["english", "uzbek"]
+let languages = [{
+    name: "english",
+    content:{
+        english:"English",
+        uzbek: "Inglizcha"
+    }
+}, {
+    name: "uzbek",
+    content:{
+        english:"Uzbek",
+        uzbek:"O'zbekcha"
+    }
+}]
 let stringsArr = {
     english,
     uzbek,

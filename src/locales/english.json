@@ -3,7 +3,7 @@
     "title": "Todo",
     "task": "Your task",
     "add": "Add Todo",
-    "enter":"Enter your task "
+    "enter":"Enter your task"
   },
   "filter": {
     "clear": "Clear All",
@@ -25,6 +25,10 @@
     "edit": {
       "want": "You want edit this todo ?",
       "doNot":"No I Don't"
+    },
+    "languages":{
+      "english":"English",
+      "uzbek":"Uzbek"
     }
   }
 }

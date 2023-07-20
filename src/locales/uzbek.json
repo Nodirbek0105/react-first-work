@@ -25,6 +25,10 @@
       "edit": {
         "want": "Siz bu Topshiriqni o'zgartirishni hohlaysizmi ?",
         "doNot":"Yo'q Qilmayaman"
+      },
+      "languages":{
+        "english":"Inglizcha",
+        "uzbek":"O'zbekcha"
       }
     }
   }

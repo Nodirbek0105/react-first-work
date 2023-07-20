@@ -1,19 +1,20 @@
 import React, { useContext, useRef, useState } from 'react'
 import { LanguageContext } from '../../context/LanguageContext'
+import { TextField } from '@mui/material'
 
 export default function todo() {
     const [todos, setTodos] = useState([])
     const [id, setId] = useState(0)
+    const [name, setName] = useState("")
     const input = useRef(null)
     const [language, setLanguage] = useState("english")
-    const name = useRef(null)
     const { languages, stringsArr } = useContext(LanguageContext)
     const [strings, setStrings] = useState(stringsArr[language])
     let todoBox = document.querySelector("[data-todos]")
 
     function onSubmit(evt) {
         evt.preventDefault()
-        setTodos([...todos, { name: name.current.value, isDone: false, id: id, rendered: true, modal: false, edited: false }])
+        setTodos([...todos, { name: name, isDone: false, id: id, rendered: true, modal: false, edited: false },])
         setId(id + 1)
     }
 
@@ -105,43 +106,28 @@ export default function todo() {
                                 <div className="languages">
                                     {...languages.map((lang) => {
                                         return <>
-                                            <button key={lang} onClick={() => setStrings(stringsArr[lang])} className="btn-primary">{lang}</button>
+                                            <button key={lang.name} onClick={() => { setStrings(stringsArr[lang.name]); setLanguage(`${lang.name}`) }} className={`btn btn-primary w-100 mt-3${language == lang.name ? " disabled" : ""}`}>{lang.content[language]}</button>
                                         </>
                                     })}
                                 </div>
                             </div>
-                            <form onSubmit={onSubmit} className="card-body">
-                                <label htmlFor="task" className="form-label">{strings?.create?.task}</label>
-                                <input ref={name}
-                                    required type="text" className="form-control" id="task" placeholder={strings?.create?.enter}
-                                />
-                                <button type="submit" className="btn btn-primary w-100 mt-3">
-                                    {strings?.create?.add}
-                                </button>
+                            <form onSubmit={onSubmit} className="card-body"> <label htmlFor="task" className="form-label">{strings?.create?.task}</label>
+                                <TextField onChange={(evt) => setName(evt.target.value)} defaultValue={""} required id="outlined-basic" label={strings?.create?.enter} variant="outlined" />
+                                {/* <input ref={name} required type="text" className="form-control" id="task" placeholder={strings?.create?.enter} /> */}
+                                <button type="submit" className="btn btn-primary w-100 mt-3">{strings?.create?.add}</button>
                             </form>
                             <div className="filter d-flex justify-content-around align-items-center">
-                                <button type="button" className={` ${todos.length < 1 ? "disabled" : ""} btn btn-sm btn-danger `} onClick={() => {
+                                < button type="button" className={` ${todos.length < 1 ? "disabled" : ""} btn btn-sm btn-danger `} onClick={() => {
                                     setTodos([])
                                     todoBox.classList.remove("todos")
-                                }}
-                                >{strings?.filter?.clear}
-                                </button>
+                                }}>{strings?.filter?.clear}</button>
                                 <button type="button" className={`${todos.some(a => a.isDone == true) ? "" : "disabled"} btn btn-sm btn-success`} onClick={() => {
                                     clearDone()
                                     todoBox.classList.remove("todos")
-                                }}
-                                >{strings?.filter?.clearDone}
-                                </button>
-                                <button type="button" className={` ${todos.length < 1 ? "disabled" : ""} btn btn-sm btn-success `} onClick={() => all()}
-                                >{strings?.filter?.all}
-                                </button>
-                                <button type="button" className={`${todos.some(a => a.isDone == true) ? "" : "disabled"} btn btn-sm btn-success`} onClick={() => done()}
-                                >
-                                    {strings?.filter?.done}
-                                </button>
-                                <button type="button" className={`${todos.some(a => a.isDone == false) ? "" : "disabled"} btn btn-sm btn-success`} onClick={() => notDone()}
-                                >{strings?.filter?.notDone}
-                                </button>
+                                }}>{strings?.filter?.clearDone}</button>
+                                <button type="button" className={` ${todos.length < 1 ? "disabled" : ""} btn btn-sm btn-success `} onClick={() => all()}>{strings?.filter?.all}</button>
+                                <button type="button" className={`${todos.some(a => a.isDone == true) ? "" : "disabled"} btn btn-sm btn-success`} onClick={() => done()}>{strings?.filter?.done}</button>
+                                <button type="button" className={`${todos.some(a => a.isDone == false) ? "" : "disabled"} btn btn-sm btn-success`} onClick={() => notDone()}>{strings?.filter?.notDone}</button>
 
                             </div>
                             <div data-todos className="">
@@ -172,7 +158,8 @@ export default function todo() {
                                                 <div className="modal-content">
                                                     <div className="modal-header">
                                                         <h5 className="modal-title" id="exampleModalLabel">
-                                                            {strings?.modal?.delete?.want}</h5>
+                                                            {strings?.modal?.delete?.want}
+                                                        </h5>
                                                         <button type="button" className="btn-close" onClick={() => openModal(todo.id)} data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div className="modal-body">
@@ -185,27 +172,22 @@ export default function todo() {
                                                 </div>
                                             </div>
                                         </div >
-                                        <div className={`modal fade ${todo.edited == true ? "show d-block" : ""}`} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">{strings?.modal?.edit?.want}</h5>
-                                                        <button type="button" className="btn-close" onClick={() => openModalEdit(todo.id)} data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <form onSubmit={(evt) => {
-                                                            editTodo(todo.id, input.current.value)
-                                                            evt.preventDefault()
-                                                        }}>
-                                                            <input required="" type="text" ref={input} defaultValue={todo.name} onChange={(evt) => input.current.defaultValue = input.current.value} />
-                                                        </form>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-success" onClick={() => openModalEdit(todo.id)} data-bs-dismiss="modal">{strings?.modal?.edit?.doNot}</button>
-                                                        <button type="button" className="btn btn-danger" onClick={() => editTodo(todo.id, input.current.value)} >{strings?.todo?.edit}</button>
-                                                    </div>
-                                                </div>
+                                        <div className={`modal fade ${todo.edited == true ? "show d-block" : ""}`} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"><div className="modal-dialog"><div className="modal-content">
+                                            <div className="modal-header">
+                                                <h5 className="modal-title" id="exampleModalLabel">{strings?.modal?.edit?.want}
+                                                </h5>
+                                                <button type="button" className="btn-close" onClick={() => openModalEdit(todo.id)} data-bs-dismiss="modal" aria-label="Close">
+                                                </button>
                                             </div>
+                                            <div className="modal-body">
+                                                <form onSubmit={(evt) => {
+                                                    editTodo(todo.id, input.current.value)
+                                                    evt.preventDefault()
+                                                }}>
+                                                    <input required="" type="text" ref={input} defaultValue={todo.name} onChange={(evt) => input.current.defaultValue = input.current.value} /></form></div><div className="modal-footer"><button type="button" className="btn btn-success" onClick={() => openModalEdit(todo.id)} data-bs-dismiss="modal">{strings?.modal?.edit?.doNot}</button><button type="button" className="btn btn-danger" onClick={() => editTodo(todo.id, input.current.value)} >{strings?.todo?.edit}</button>
+                                            </div>
+                                        </div>
+                                        </div>
                                         </div >
                                     </>
                                 })}
